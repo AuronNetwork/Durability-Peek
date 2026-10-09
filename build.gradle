@@ -1,0 +1,64 @@
+plugins {
+    id 'net.fabricmc.fabric-loom' version "${loom_version}"
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+    archivesName = "${project.archives_base_name}-${project.minecraft_version}"
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    testImplementation platform('org.junit:junit-bom:5.14.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+processResources {
+    def modProperties = [
+        version: project.version,
+        fabric_version: project.fabric_version,
+        loader_version: project.loader_version
+    ]
+    inputs.properties modProperties
+    filesMatching('fabric.mod.json') {
+        expand modProperties
+    }
+}
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(25)
+    withSourcesJar()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 25
+    options.encoding = 'UTF-8'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jar {
+    from('LICENSE') {
+        rename { "${it}_${project.archives_base_name}" }
+    }
+}
+
+tasks.register('releaseZip', Zip) {
+    dependsOn jar
+    archiveFileName = "${project.archives_base_name}-${project.minecraft_version}-${project.version}.zip"
+    destinationDirectory = layout.buildDirectory.dir('distributions')
+    from(tasks.named('jar'))
+    from('README.md', 'LICENSE')
+}

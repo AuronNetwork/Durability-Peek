@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "durability_peek",
+  "version": "${version}",
+  "name": "Durability Peek",
+  "description": "Shows remaining item durability and percentage in the tooltip, without requiring advanced tooltips.",
+  "authors": ["AuronNetwork"],
+  "contact": {
+    "sources": "https://github.com/AuronNetwork/Durability-Peek",
+    "issues": "https://github.com/AuronNetwork/Durability-Peek/issues"
+  },
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["net.auronnetwork.durabilitypeek.DurabilityPeekClient"]
+  },
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "minecraft": "26.3",
+    "java": ">=25",
+    "fabric-api": ">=${fabric_version}"
+  }
+}
